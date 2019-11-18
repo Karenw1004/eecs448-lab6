@@ -31,21 +31,21 @@ class Queue : public QueueInterface<int>
 	*/
 	bool isEmpty() const;
 
-	/** 
+	/**
 	*	@post Entry added to back of queue
 	*	@param newEntry The object to be added as a new entry
 	*/
 	void enqueue(const int& newEntry);
 
 
-	/** 
+	/**
 	*	@post Front of the queue is removed
 	*	@return The value of the entry at the front of the queue
 	*	@throw std::runtime_error if queue is empty
 	*/
 	void dequeue();
 
-	/** 
+	/**
 	*	@pre The queue is not empty
 	*	@post The value at the front is returned and the queue is unchanged
 	*	@return The value of the entry at the front of the queue
@@ -60,4 +60,3 @@ class Queue : public QueueInterface<int>
 };
 
 #endif
-

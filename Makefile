@@ -8,4 +8,4 @@ QueueTester.o: QueueTester.h QueueTester.cpp
 	g++ -g -std=c++11 -c QueueTester.cpp
 
 clean:
-	rm main.o *.*~QueueDemo
+	rm main.o QueueDemo *~
