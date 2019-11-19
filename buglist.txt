@@ -1,1 +1,7 @@
-
+Bugs:
+1. With Valgrind, I was able to check that there was a memory leak.
+~Queue() is likely to empty.
+2. In the documentation, dequeue @return , but dequeue should not return anything
+since it is void.
+3. Queue is FIFO. Enqueue() should add to the back.
+The test showed that it is adding to front which is wrong
