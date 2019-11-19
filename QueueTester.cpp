@@ -4,27 +4,38 @@ QueueTester::QueueTester(){
   runTests();
 }
 void QueueTester::runTests(){
-  // cout << "Queue() TEST\n";
-  // constructorTest();
-  // cout << "\nisEmpty() TEST \n";
-  // isEmptyTest1();
-  // isEmptyTest2(); // 1 leak
-  // isEmptyTest3();
+  cout << "Queue() TEST\n";
+  cout << "@post Creates an empty queue\n";
+  constructorTest();
+  cout << "\nisEmpty() TEST \n";
+  cout << "@return True if the queue is empty, false otherwise\n";
+  isEmptyTest1();
+  isEmptyTest2();
+  isEmptyTest3();
+  isEmptyTest4();
   cout << "\nEnqueue() TEST\n";
-  enqueueTest1(); // 1 leak
+  cout << "@post Entry added to back of queue\n";
+  cout << "@param newEntry The object to be added as a new entry\n";
+  enqueueTest1(); //
   enqueueTest2();
-  enqueueTest3(); //randomnum + 1 leak
-  enqueueTest4(); // 3 leak
-  enqueueTest5(); // 3 leak
-  enqueueTest6(); // 3 leak
+  enqueueTest3(); //
+  enqueueTest4(); //
+  enqueueTest5(); //
   cout << "\nDeqeue() TEST\n";
+  cout << "@throw std::runtime_error if queue is empty\n";
   dequeueTest1();
-  dequeueTest2(); // 1 leak
+  cout << "@post Front of the queue is removed\n";
+  dequeueTest2(); //
+  dequeueTest3(); //
+  cout << "@return The value of the entry at the front of the queue\n";
+  cout << "No test for this (dequeue should not return anything since it is void)\n";
   cout << "\n~Queue() MANUAL TEST WIH VALGRIND\n";
+  cout << "@post Deletes all entries in the queue\n";
   valgrindTest();
 }
 void QueueTester::constructorTest(){
   Queue myQueue;
+
   cout << "Test #1: Creates an empty queue";
   if (myQueue.isEmpty()){ cout << " PASSED\n";}
   else { cout << " FAILED\n";  }
@@ -62,12 +73,20 @@ void QueueTester::isEmptyTest2(){
 void QueueTester::isEmptyTest3(){
   Queue myQueue;
   cout << "Test #3: Remove the added one node to a Queue with one node returns true ";
-  srand (time(NULL));
-  int randomNum = rand()%101; // range 0-100
-  myQueue.enqueue(randomNum);
+  myQueue.enqueue(1);
   myQueue.dequeue();
   if (myQueue.isEmpty()){ cout << " PASSED\n";}
   else { cout << " FAILED\n";  }
+}
+void QueueTester::isEmptyTest4(){
+  Queue myQueue;
+  cout << "Test #4: Enqueue multiple times,check if Queue is not empty ";
+  srand (time(NULL));
+  for (int i = 0; i < 7; i++){
+    myQueue.enqueue(7);
+  }
+  if (myQueue.isEmpty()){ cout << " FAILED\n";}
+  else { cout << " PASSED\n";  }
 }
 
 void QueueTester::enqueueTest1(){
@@ -85,57 +104,60 @@ void QueueTester::enqueueTest2(){
   myQueue.enqueue(2); //[1,2]
   myQueue.peekFront(); // output = 2 expect = 1
   myQueue.enqueue(3); //[1,2,3]
-  cout << myQueue.peekFront(); // output = 3 expect = 1
+  myQueue.peekFront(); // output = 3 expect = 1
   if (myQueue.peekFront() == 1){ cout << " PASSED\n";}
   else if (myQueue.peekFront() == 3){
     cout << " FAILED (returns the back 3)\n";
-    cout << " BUG: peekFront() returns the m_back not m_front \n";
  }
   else {cout << " FAILED \n";}
 }
 void QueueTester::enqueueTest3(){
   Queue myQueue;
-  cout << "Test 3: Enqueue 1(first),2 and 3(back)  and check peekFront() == 1 ";
+  cout << "Test #3: Enqueue 1,dequeue, Enqueue 2(first)and 3(back) and check peekFront() == 2";
   myQueue.enqueue(1); //[1]
   myQueue.dequeue(); // []
   myQueue.enqueue(2); //[2]
   myQueue.peekFront(); // output = 2 expect = 2
   myQueue.enqueue(3); //[2,3]
-  cout << myQueue.peekFront(); // output = 3 expect = 2
+  myQueue.peekFront(); // output = 3 expect = 2
   myQueue.dequeue(); //[3]
-  cout << myQueue.peekFront(); //output = 2 expect 3
-
+  if (myQueue.peekFront() == 2)  //output = 2 expect 3
+  {
+    cout<< " PASSED\n";
+  } else {
+    cout << " FAILED\n";
+  }
 }
 void QueueTester::enqueueTest4(){
-
+  Queue myQueue;
+  cout << "Test #4: Enqueue, peekFront(), check if peekFront() change the queue with isEmpty()  ";
+  myQueue.enqueue(1);
+  myQueue.enqueue(2);
+  myQueue.enqueue(3);
+  myQueue.peekFront();
+  if (myQueue.isEmpty()) {cout << "FAILED\n";}
+  else {cout << "PASSED\n";}
 }
 void QueueTester::enqueueTest5(){
   Queue myQueue;
-  cout << "Test #5: Enqueue 1,2,3 , do peekFront(), check if peekFront() change the queue with isEmpty()  ";
-  srand (time(NULL));
-  int randomNum = rand()%101; // range 0-100
-  myQueue.enqueue(1);
-  myQueue.enqueue(2);
-  myQueue.enqueue(3);
-  myQueue.peekFront();
-  if (myQueue.isEmpty()) {cout << "FAILED\n";}
-  else {cout << "PASSED\n";}
+  cout << "Test #5: Add 1,peek,add 2,peek,add 3. Peek three times will be 1 1 1\n";
+  int firstNum , secondNum ,thirdNum ;
+  myQueue.enqueue(1); //[1]
+  firstNum = myQueue.peekFront() ; //output is 1 expect is 1
+  myQueue.enqueue(2); //[1,2]
+  secondNum = myQueue.peekFront() ; //2 expect is 1
+  myQueue.enqueue(3); //[1,2,3]
+  thirdNum = myQueue.peekFront() ;// 3 expect is 1
+  cout << "\t\t\t\t      ";
+  cout << "Output is " << firstNum << " " << secondNum << " " << thirdNum ;
+  cout << "  FAILED\n";
+
+
 }
-void QueueTester::enqueueTest6(){
-  Queue myQueue;
-  cout << "Test #6: Enqueue 1,2,3 , do peekFront(), check if peekFront() change the queue with isEmpty()  ";
-  srand (time(NULL));
-  int randomNum = rand()%101; // range 0-100
-  myQueue.enqueue(1);
-  myQueue.enqueue(2);
-  myQueue.enqueue(3);
-  myQueue.peekFront();
-  if (myQueue.isEmpty()) {cout << "FAILED\n";}
-  else {cout << "PASSED\n";}
-}
+
 void QueueTester::dequeueTest1(){
   Queue myQueue;
-  cout << "Test #1: Create an Empty Queue and check if Dequeue throws error ";
+  cout << "Test #1: Dequeue an Empty queue throws error ";
   try{
     myQueue.dequeue();
     cout << " FAILED\n";
@@ -149,28 +171,26 @@ void QueueTester::dequeueTest2(){
   myQueue.enqueue(1);
   myQueue.enqueue(2);
   myQueue.enqueue(3);
-  // myQueue.enqueue(4);
-  // myQueue.enqueue(5);
   myQueue.dequeue();
   myQueue.dequeue();
   if (myQueue.peekFront() == 3){ cout << "  PASSED\n";}
   else if (myQueue.peekFront() == 1) {
-    cout << "  FAILED (return 1)\n";
-    cout << "  BUG: dequeue() delete the m_back not the m_front!\n";
+    cout << "  FAILED \n";
   }
-
+}
+void QueueTester::dequeueTest3(){
+  Queue myQueue;
+  cout << "Test #3: Enqueue 1,2,3 dequeue 3 times ,check isEmpty is true ";
+  myQueue.enqueue(1);
+  myQueue.enqueue(2);
+  myQueue.enqueue(3);
+  myQueue.dequeue();
+  myQueue.dequeue();
+  myQueue.dequeue();
+  if (myQueue.isEmpty()){ cout << "  PASSED\n";}
+  else { cout << "  FAILED \n";}
 }
 void QueueTester::valgrindTest(){
   Queue myQueue;
-  cout << "Test #12: ~Queue() no memory leak FAILED \n";
-  cout << ">>TEST2: 1 LEAK\n";
-  cout << ">>TEST4: 1 LEAK\n";
-  cout << ">>TEST6: "<< enqueueTest3Num << "+1 LEAK\n";
-  cout << ">>TEST7: 3 LEAK\n";
-  cout << ">>TEST8: 3 LEAK\n";
-  cout << ">>TEST9: 3 LEAK\n";
-  cout << ">>TEST11: 1 LEAK\n";
-  int memoryLeak = 1+1+enqueueTest3Num+1+3+3+3+1;
-  cout << "HAVE NOT FREE " << memoryLeak << " MEMORY LEAK IN THE HEAP USAGE\n";
-  cout << "BUG: ~Queue is likely to be empty\n";
+  cout << "Test #1: ~Queue() no memory leak FAILED \n";
 }

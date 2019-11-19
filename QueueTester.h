@@ -20,14 +20,15 @@ class QueueTester
     void isEmptyTest1();
     void isEmptyTest2();
     void isEmptyTest3();
+    void isEmptyTest4();
     void enqueueTest1();
     void enqueueTest2();
     void enqueueTest3();
     void enqueueTest4();
     void enqueueTest5();
-    void enqueueTest6();
     void dequeueTest1();
     void dequeueTest2();
+    void dequeueTest3();
     void valgrindTest();
     void test13();
     void test14();
